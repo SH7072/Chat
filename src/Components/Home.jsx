@@ -20,7 +20,7 @@ const db = getFirestore(app);
 const logoutHandler = () => {
 
     signOut(auth).then(() => {
-        
+
     }).catch((error) => {
         // console.log(error);d
     })
@@ -35,13 +35,13 @@ const Home = (props) => {
 
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
-    
-    const scrollV=useRef(null);
+
+    const scrollV = useRef(null);
     const submitHandler = async (e) => {
         e.preventDefault();
 
         try {
-            
+
 
             await addDoc(collection(db, "Message"), {
                 text: message,
@@ -50,7 +50,7 @@ const Home = (props) => {
                 createdAt: serverTimestamp(),
             });
             setMessage("");
-            scrollV.current.scrollIntoView({behavior:" smooth"})
+            scrollV.current.scrollIntoView({ behavior: "smooth" })
         } catch (error) {
             alert(error);
         }
@@ -95,7 +95,7 @@ const Home = (props) => {
                             <Message key={item.id} user={item.uid === user.uid ? "me" : "other"} text={item.text} uri={item.uri} />
                         ))
                         }
-                    <div ref={scrollV}></div>
+                        <div ref={scrollV}></div>
                     </VStack>
                     <form onSubmit={submitHandler} style={{ width: "100%", backgroundColor: "" }}>
 
