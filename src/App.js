@@ -1,21 +1,44 @@
 import './App.css';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
+import Home from './Components/Home';
+import { onAuthStateChanged, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { app } from './api/firebase';
+import { useEffect, useState } from 'react';
+import { Button, VStack } from '@chakra-ui/react';
 
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-
-firebase.initializeApp({
-  
-})
+const auth = getAuth(app);
+const loginHandler = () => {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider);
+};
 
 function App() {
+  const [user, setUser] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (data) => {
+      setUser(data);
+    })
+  
+    return ()=>{
+      unsubscribe();
+    }
+  },[]);
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-      
-      </header>
+
+    <div>
+      {
+        user ?
+          (<Home user={user} />) :
+
+          (
+            <VStack h={'100vh'} justifyContent={'center'} alignItems={'center'}>
+
+              <Button onClick={loginHandler} >Sign In</Button>
+            </VStack>
+          )
+      }
     </div>
   );
 }
